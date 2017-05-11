@@ -1,0 +1,42 @@
+<div class="containt-login">
+  <div class="container">
+    <div class="col-md-4"></div>
+    <div class="col-md-4 form-signup" style="padding-left:0px;padding-right:0px;">
+<span style="color:#f68a55;font-size:24pt;margin-top:35px;display:block;text-align:center">Sign Up</span>
+<span *ngIf="errorMessage" style="text-align: center; display: block; padding-top: 10px; color: red;" class="error">{{errorMessage}}</span>
+<form role="form" name="form" (submit)="register($event, firstname.value, surname.value, gender.value, email.value, password.value)">
+  <div class="form-group">
+    <input type="text" #firstname name="firstname" id="firstname" class="form-control" placeholder="First Name">
+  </div>
+  <div class="form-group form-dashboard">
+    <input type="text" #surname id="surname" name="surname" class="form-control" placeholder="Surname">
+  </div>
+  <div class="form-group">
+    <div class="select">
+      <select name="gender" #gender class="form-control" required>
+          <option value="" disabled>Select Gender</option>
+          <option value="F">Female</option>
+          <option value="M">Male</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <input type="email" #email class="form-control" placeholder="Email" name="email" required />
+  </div>
+  <div class="form-group">
+    <input type="password" #password class="form-control" placeholder="Password" name="password" required />
+  </div>
+  <div class="form-group center-block">
+    <button type="submit" class="btn-register center-block">REGISTER</button>
+  </div>
+</form>
+<div class="form-signup-bottom">
+  <div class="form-group" style="margin-bottom:16px;"><span>OR</span></div>
+
+<div class="form-group">
+  <button (click)="onFacebookLoginClick()" class=" btn btn-facebook"><i class="pull-left fa fa-facebook"></i>Sign up with Facebook</button></div>
+
+<div class="form-group"><span>Already registered? <a [routerLink]="['/login']" ><u>Sign in</u></a> here.</span></div>
+</div>
+</div>
+</div>

@@ -1,0 +1,18 @@
+<div class="row" my-interests>
+    <div class="col-xs-12 modal-header">
+      <span class="title-section"><i class="fa fa-heart-o"></i> My interests</span>
+    </div>
+    <div class="col-xs-12 sidebar-body" style="padding-bottom: 20px;">
+      <div>
+        <a *ngIf="authGuard.isLoggedIn()==false" [routerLink]="['/login']">
+          <img src="/assets/img/tag-grey.png" class="img-responsive" />
+        </a>
+        <ul *ngIf="authGuard.isLoggedIn()==true" class="list-inline">
+          <li *ngFor='let interest of UserPrefs; let i = index;'  class="col-xs-4">
+            <a ng-href="" class="btn btn-interest col-xs-12" (click)="toggleInterestFilter(i)" ng-class="{'btn-interest-cl':interest.selected}"
+              style="width: 100%;">{{interest}}</a>
+          </li>
+        </ul>
+      </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+RewriteEngine On
+#forward traffic from http to http for www.livup.co
+#RewriteCond %{HTTP_HOST} www.livup.co [NC]
+#RewriteCond %{SERVER_PORT} !https [NC]
+#RewriteRule ^.*$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+#If the ENVIRONMENT variable is 'production' then show a maintenance page
+RewriteCond %{REQUEST_URI} config.js [NC]
+RewriteCond %{ENV:LIVUP_ENV} ^production$
+RewriteRule ^.*$ /config.prod.js [L]
+
+RewriteCond %{REQUEST_FILENAME} -s [OR]
+RewriteCond %{REQUEST_FILENAME} -l [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^.*$ - [NC,L]
+RewriteRule ^.*$ index.html [NC,L]

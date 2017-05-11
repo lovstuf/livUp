@@ -1,0 +1,106 @@
+
+    <section id="intro" class="intro-section" style="position:relative;">
+        <div class="container" style="margin-bottom:120px; height:550px ">
+            <div class="row header">
+                <div class="col-lg-12">
+                    <span class="title-header StreetscriptRedux " style="display:block;font-size:64px;color: white;padding-top: 100px;">Up your Yogi.</span>
+                </div>
+                <div class="col-lg-12">
+                  <p class="slegon" style="display:block;font-size:22px;color: white; padding-top:15px;padding-bottom:50px;">Find yoga classes you'll love in London with awesome
+                    <br/>communities hosted by people Living Up</p>
+                    <a [routerLink]="['/register']" class="btn-register" style="padding-top:15px;padding-bottom:15px;font-weight:100;letter-spacing:3px;font-size: 18px;border-radius: 50px !important;padding-left:30px;padding-right:30px;	font-family: 'Merriweather Sans', sans-serif;" > JOIN NOW </a>
+                    <span class="title-header StreetscriptRedux " style="display:block;font-size:24px;color: white;padding-top: 50px;">It's absolutely free!</span>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col-lg-12" style="position: absolute; bottom: 0;height:130px;text-align:left;padding-left:500px">
+          <span class="title-header StreetscriptRedux " style="display:block;font-size:34px;color: white;padding-top: 5px">Find your balance!</span>
+          <p  style="font-family:'Merriweather Sans';font-style:italic;display:block;font-size:18px;color: white; padding-top:15px;padding-bottom:50px;">
+            We help you find wonderful yoga classes held by independent yoga instructors.</p>
+        </div>
+    </section>
+    <section *ngIf="searchTotal != 0" id="recentevent" class="recentevent-section">
+            <div class="container">
+                <div class="row header">
+                    <div class="col-lg-12 " style="text-align:center;">
+                        <span style="font-size:34pt;margin-top:35px;margin-bottom:35px;display:block" class="title-header StreetscriptRedux"> Recent Events</span>
+                    </div>
+                    <div class="col-lg-12">
+                    	 <p class="slegon"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+              <div class="row">
+                <div *ngFor="let result of searchHits" [ngSwitch]="result._type">
+                    <section *ngSwitchCase="'activitySummary'" class="col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-header body-post-act">
+                                <a ng-href="" style="color: #0079cf" [routerLink]="['/activites',result._id]" *ngIf="result._source.profileImgURI">
+                                    <img  [src]="getProfileImgURI(result._source.profileImgURI)" class="img-responsive" alt="" style="height: 250px">
+                                </a>
+                                <a ng-href="" style="color: #0079cf" [routerLink]="['/activites',result._id]" *ngIf="!result._source.profileImgURI">
+                                    <img  [src]="getProfileImgURI('')" class="img-responsive" alt="" style="height: 250px">
+                                </a>
+                            </div>
+                            <div class="panel-body footer-post" style="box-shadow: 0px 0px 2px 2px #e3e2e0;">
+                                <div>
+                                    <div class="details" style="padding-left:20px; padding-right:20px;">
+                                        <a ng-href="" [routerLink]="['/activites',result._id]">
+                                            <b style="color:black">{{ result._source.name }}</b>
+                                        </a>
+                                        <p style="display: block; /* Fallback for non-webkit */display: -webkit-box; -webkit-line-clamp: 4;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;">
+                                            {{ result._source.bio }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+              </div>
+            </div>
+        </section>
+        <div  id="awsome" class="awsome-section">
+                <div  style="width:100%">
+                    <div class="row header">
+                        <div class="col-lg-12 " style="text-align:center;background-color:#fff;">
+                            <span style="font-size:34pt;margin-top:35px;margin-bottom:35px;display:block" class="title-header StreetscriptRedux">Awesome activities <br/> you can discover with LivUp</span>
+                        </div>
+
+                        <div style="background-color:#fff;"  class="col-lg-12">
+                            <div style="margin:auto;text-align:center;width:1125px">
+                            <div class="awsome-tag" style="background-color:#44bdd8;">Yoga &amp; Pilates</div>
+                            <div class="awsome-tag " style="background-image: url('/assets/img/awsome_bg1.jpg');"></div>
+                            <div class="awsome-tag" style="background-image: url('/assets/img/awsome_bg2.jpg');">Dancing</div>
+                            </div>
+                            <div style="margin:auto;text-align:center;width:1125px">
+                            <div class="awsome-tag " style="background-image: url('/assets/img/awsome_bg3.jpg');">Martial arts</div>
+                            <div class="awsome-tag" style="background-color:#efb42c;">Cooking classes</div>
+                            <div class="awsome-tag" style="background-image: url('/assets/img/awsome_bg4.jpg');"></div>
+                            </div>
+                            <div style="margin:auto;text-align:center;width:1125px">
+                            <div class="awsome-tag" style="background-color:#d6d142;">Tennis</div>
+                            <div class="awsome-tag " style="background-image: url('/assets/img/awsome_bg5.jpg');"></div>
+                            <div class="awsome-tag" style="padding-top:90px;padding-left:40px;padding-right:40px;background-color:#f7f3f2;font-family:'Merriweather Sans';font-size:18px;color:#666;word-wrap: break-word;line-height:1.9em;font-style: italic;font-weight:bold;">
+                                Anything else you can think of...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div  id="footer-section" class="footer-section">
+                    <div class="row"  style="margin-bottom:50px;width:100%">
+                        <div class="col-lg-12 " style="text-align:center">
+                            <span style="font-size:34pt;margin-top:35px;margin-bottom:35px;display:block" class="title-header StreetscriptRedux">Are you an activity organizer</span>
+                            <p style="margin:auto;width:770px;padding-top:50px;font-family:'Merriweather Sans';font-size:21px;color:#fff;word-wrap: break-word;line-height:1.9em;font-style: italic;">LivUp is an activity discovery network that allows people to find activities they love around them, connect with the providers of these activities and pay for them online. We also help our users find other activities they might love.
+                            <br/>    <br/>    <br/>It also allows activity providers to post their activities and events, connect with the fans and patrons, connect and engage with them easily as well as take payments with no hassle.</p>
+                            <br/><br/><br/>
+
+                            <a class="btn-register" [routerLink]="['/register']" style="color:#fff; background-color:#f58a54;padding-left:30px;padding-right:30px;padding-top:15px;padding-bottom:15px;font-weight:100;letter-spacing:3px;font-size: 18px;border-radius: 50px !important;	font-family: 'Merriweather Sans', sans-serif;">SIGN UP</a>
+                        </div>
+
+                    </div>
+                </div>

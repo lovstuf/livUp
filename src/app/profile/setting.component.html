@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="row">
+    <div class="content col-lg-7">
+      <div class="col-lg-12">
+        <div class="tabbable-panel">
+          <div class="tabbable-line">
+            <ul class="nav nav-tabs" style="background-color: #ffffff;border: 0;">
+              <li role="profile">
+                <a ng-href="" [routerLink]="['/profile']" class="text-center" (click)="setTab(0)" ><span class="typcn typcn-user-outline"></span><br> My Profile</a>
+              </li>
+              <li role="account" class="active1">
+                <a ng-href="" [routerLink]="['/setting']" class="text-center" (click)="setTab(1)"><span class="typcn typcn-cog-outline"></span><br> My Account</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <br>
+        <div *ngIf="Tab==true" class="col-xs-12" style="background-color: #fff">
+          <lc-profile-detail></lc-profile-detail>
+        </div>
+        <div *ngIf="Tab==false" class="col-xs-12" style="background-color: #ffffff">
+            <lc-account></lc-account>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <div class="col-xs-12">
+      <lc-my-interests></lc-my-interests>
+      <lc-my-organisations></lc-my-organisations>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,395 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-7 ">
+      <div class="col-md-12">
+        <section *ngIf="!editingOrg" class="panel organization-post">
+          <div *ngFor="let organization of getOrg">
+          <div class="panel panel-default">
+            <div class="panel-body body-post">
+              <div class="col-md-4">
+                <a ng-href="" [routerLink]="['/organizations',organization.id]"> 
+                  <img *ngIf="organization.profileImgURI" [src]="getProfileImgURI(organization.profileImgURI)" class="img-responsive" alt="">
+                  <img *ngIf="!organization.profileImgURI" [src]="getProfileImgURI('')" class="img-responsive" alt="">
+                </a>
+                <div class="img-foot">
+                  <div *ngIf="authGuard.isLoggedIn()==false"  class="text-center">
+                        <span class="btn btn-primary modal-btn" style="width: 60px;padding-top:10px">
+                          <a ng-href="" [routerLink]="['/login']" style="text-decoration:none;color:white">LOGIN</a>
+                        </span>
+                  </div>
+                  <!--ng-click="$event.stopPropagation();likeOrg(organization.id)"-->
+                  <a ng-href="" *ngIf="authGuard.isLoggedIn()==true" (click) = "$event.stopPropagation();likeOrg(organization.id)" >
+                    <span>
+                        <i class="fa fa-heart"></i> {{organization.likes}} Like{{ (organization.likes == 1)?'':'s' }}
+                    </span>
+                  </a>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <h4 class="title">{{organization.name }}</h4>
+                <ul *ngIf="authGuard.isLoggedIn()==false" class="list-unstyled list-contact">
+                  <li><i class="fa fa-info-circle"></i>{{ organization.bio }}</li>
+                </ul>
+                <ul *ngIf="authGuard.isLoggedIn()==true" class="list-unstyled list-contact">
+                  <li><i class="fa fa-envelope"></i> {{organization.contact.email }}</li>
+                  <li><i class="fa fa-phone"></i> {{organization.contact.telephone }}</li>
+                  <li><i class="fa fa-map-marker"></i> {{organization.address }}</li>
+                  <li *ngIf="(organization.elecPayments && organization.elecPayments.length >= 1)"><img class="text-left" style="height: 18px;width: inherit;margin: inherit" src="/assets/images/icons/PayPal.svg"></li>
+                  <!-- <li><i class="fa fa-globe"></i>  {{organization.website }}</li> -->
+                </ul>
+              </div>
+              <div *ngIf="authGuard.isLoggedIn()==true" class="col-md-2 bouton">
+                <a class="btn btn-org" *ngIf="organization.adminId.indexOf(userId) > -1" (click)="edit()" tooltip="edit"><i class="fa fa-pencil" style="font-size:18px;margin-top:15px;"></i> </a>
+                <a class="btn btn-org" *ngIf="!(organization.elecPayments && organization.elecPayments.length >= 1) && isOwner" (click)="onlinePaymentSetting.show()"><i class="fa fa-credit-card" ></i> <span>Add online<br> payment</span></a>
+                <a class="btn btn-org" *ngIf="(organization.elecPayments && organization.elecPayments.length >= 1) && isOwner" (click)="onlinePaymentSetting.show()"><i class="fa fa-paypal"></i> <span>Update</span></a>
+              </div>
+            </div>
+
+          </div>
+          <div class="modal fade" bsModal #onlinePaymentSetting="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close pull-right" aria-label="Close" (click)="onlinePaymentSetting.hide()">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title text-center">Online Payment Setting</h4>
+                  </div>
+                  <div class="modal-body">
+                    <form name="form" (ngSubmit)="onSubmit(f2)" #f2="ngForm" >
+                      <div class="col-lg-12" style="padding: 12px 32px 15px; margin-top: 15px">
+                        <h4 style="text-align:center;font-size: 1.4em;color: #777777;margin-top: 25px;margin-bottom: 30px;"><i class="fa fa-paypal"></i> Paypal Account</h4>
+                        <hr/>
+                        <div *ngIf="status!='false'">
+                          <alert type="success" dismissible="true" dismissOnTimeout="3000" (onClosed)="onlinePaymentSetting.hide()">{{status}}</alert>
+                        </div>
+                        <input type="hidden" ngModel="add" *ngIf="!(organization.elecPayments && organization.elecPayments.length >= 1) && isOwner" name="status" />
+                        <input type="hidden" ngModel="update" *ngIf="(organization.elecPayments && organization.elecPayments.length >= 1) && isOwner" name="status" />
+                        <div class="form-group form-dashboard">
+                          <input type="email" class="form-control" name="email" #email ngModel="" placeholder="Enter Paypal Email" required />
+                        </div>
+                      </div>
+                      <div class="text-center" style="padding: 25px 30px; margin-bottom: 60px;">
+                        <button type="submit" class="btn btn-primary modal-btn" [disabled]="!email.value" style="width: 100px;">Save</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!--Editing Section-->
+        <section *ngIf="editingOrg">
+          <div *ngFor="let organization of getOrg">
+            <form name="form" *ngIf="authGuard.isLoggedIn()==true && editingOrg" (ngSubmit)="saveOrg(f)" #f="ngForm">
+              <br /><br />
+              <div class="text-center">
+                <div style="position: relative; width: 120px; height: 120px; margin: 0 auto; ">
+                  <img src="{{orgImage}}" class="pointer" height="120px" width="120px" (click)="imageModal.show()">
+                  <div class="org-img-text" (click)="imageModal.show()" style="opacity: 1;background-color: transparent;"><br /><br />
+                    <div><i class="fa fa-camera fa-3x"></i></div>
+                  </div>
+                  <br />
+                </div><br /><br /><br />
+              </div>
+              <div class="col-xs-8 col-xs-offset-2" style="margin-bottom: 30px;">
+                  <div class="form-group form-dashboard">
+                    <input type="text" class="form-control" #name id="name" ngModel="{{organization.name }}" name="name" placeholder="Name" required>
+                  </div>
+                  <div class="form-group form-dashboard">
+                    <input type="text" class="form-control" #address1 ngModel="{{organization.address }}" name="address" placeholder="Address" required>
+                  </div>
+                  <div class="form-group form-dashboard">
+                    <input type="email" class="form-control" #email ngModel="{{organization.contact.email }}" name="email" placeholder="Email" required>
+                  </div>
+                  <div class="form-group form-dashboard">
+                    <input type="text" class="form-control" #telephone ngModel="{{organization.contact.telephone }}" name="telephone" placeholder="Phone" required>
+                  </div>
+                  <div style="padding-top: 22px; padding-bottom: 25px; text-align: center">
+                    <button type="button" class="btn btn-primary cancel" (click)="cancel()">Cancel</button>
+                    <button type="submit" class="btn btn-primary save" [disabled]="!(name.value && address1.value && email.value && telephone.value)" >Accept</button>
+                  </div>
+                </div>
+                
+              </form>
+            </div>
+          </section>
+        </div>
+        <!--col-md-12 ended-->
+        <div  class="col-md-12" style="margin-bottom:15px;"  *ngIf="isOwner &&  authGuard.isLoggedIn()==true">
+          <span class="add-org" ><a ng-href="" (click)="activityModal.show()"><i class="fa fa-plus-circle"></i>Add Activity</a></span>
+        </div>
+        <br>
+        <!-- list activity -->
+        <div *ngIf="authGuard.isLoggedIn()==true" class="col-lg-12" style="padding: 5;">
+          <div class="header-activities">
+            <h3><span class="typcn typcn-calendar-outline"></span> <b>Activities</b></h3>
+          </div>
+          <div class="body-activities col-md-12">
+              <div *ngFor="let activity of orgActivities" class="col-md-4">
+                <section class="panel">
+                  <div class="panel panel-default">
+                    <div class="panel-header body-post-act">
+                      <a ng-href="" [routerLink]="['/activites',activity.id]" style="color: #0079cf" *ngIf="activity.profileImgURI">
+                        <img  [src]="getProfileImgURI(activity.profileImgURI)" class="img-responsive" alt="">
+                      </a>
+                      <a ng-href="" [routerLink]="['/activites',activity.id]" style="color: #0079cf" *ngIf="!activity.profileImgURI">
+                        <img  [src]="getProfileImgURI('')" class="img-responsive" alt="">
+                      </a>
+                    </div>
+                    <div class="panel-body footer-post">
+                      <div class="col-lg-12 details">
+                        <a ng-href="" [routerLink]="['/activites',activity.id]">
+                          <b>{{ activity?.name }} </b>
+                        </a>
+                        <p style="display: block; /* Fallback for non-webkit */display: -webkit-box; -webkit-line-clamp: 3;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;">{{ activity?.bio }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+          </div>
+        </div>
+        <div *ngIf="authGuard.isLoggedIn()==true" class="col-lg-12 text-center">
+          <a ng-href="" class="btn btn-bottom" (click)="viewAll()">VIEW ALL</a>
+        </div>
+        <div *ngIf="authGuard.isLoggedIn()==true" class="col-lg-12">
+          <section class="panel">
+            <form name="form" (ngSubmit)="addAStatus(f23)" #f23="ngForm">
+              <div class="panel-body">
+                <p class="text-danger" *ngIf="statusError">An error has occurred. Please try again.</p>
+                <div class="col-lg-1">
+                    <div class="avatar-post">
+                      <img #profileImgURI [src]="" class="img-circle" alt="">
+                    </div>
+                </div>
+                <div class="col-lg-10">
+                  <textarea name="status" #newstatus ngModel="" placeholder="Add new status ..." rows="2" cols="5" class="text-area-post input-lg p-text-area "></textarea>
+                </div>
+                <div class="col-lg-1">
+                  <!--<span style="font-size:0.8em;">{{ newstatus.text.length || 0 }}/300<span>-->
+                </div>
+              </div>
+              <footer class="panel-footer">
+                  <button type="submit" class="btn btn-post pull-right" ><i class="fa fa-circle-o-notch fa-spin" ></i>POST</button>
+                  <ul class="nav nav-pills">
+                      <li>
+                        <!--<div class="form-group" *ngIf="newstatus.profileImgURI">
+                          <img [src]="{{ profileImgURI }}" height="120px" width="120px" style="display:block">-->
+                          <!--<span class="help-block text-danger">The image is too large. Try using a smaller image.</span>
+                        </div>-->
+                        <!--<input type="file" id="uploadStatusImage" accept="image/*" style="display:none" file-model="f23.image" />
+                        <a ng-href="" (click)="document.getElementById('uploadStatusImage').click()"><span class="typcn typcn-camera-outline" style="color:#999"></span> Add photo</a>-->
+                        <a ng-href=""> <input type="file" (change)="fileChange($event)" #statusImage name="statusImage" placeholder="Upload file" accept="image/*">
+                        <span class="typcn typcn-camera-outline" style="color:#999"></span> Add photo</a>
+                      </li>
+                  </ul>
+              </footer>
+            </form>
+          </section>
+        </div>
+
+
+    </div>
+    <!--col-md-7 ended-->
+    <div class="col-md-5">
+      <div class="col-xs-12">
+      <lc-my-interests></lc-my-interests>
+      <lc-my-organisations></lc-my-organisations>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal fade" bsModal #imageModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="imageModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title text-center">Upload Image</h4>
+      </div>
+      <div class="modal-body text-center">
+            <img-cropper #cropper [image]="data2" [settings]="cropperSettings2" ></img-cropper>
+            <!--(onCrop)="cropped($event)"-->
+            <br />
+            <span class="result rounded" *ngIf="data2.image" >
+                <img [src]="data2.image" [width]="cropperSettings2.croppedWidth" [height]="cropperSettings2.croppedHeight">
+            </span>
+            <br />
+            
+                <label class="btn btn-default btn-file center">
+                    Browse file <input #imgFile type="file" name="upload" (change)="fileChangeListener($event)">
+                </label>
+              <br /><br />
+
+              <button type="submit" class="btn btn-primary cancel modal-btn" (click)="imageModal.hide()" >Cancel</button>
+              <button [disabled]="!imgFile.value" (click)="uploadImg()" class="btn btn-primary save modal-btn">Accept</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" bsModal #activityModal="bs-modal" [config]="{backdrop: 'static'}"
+     tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="activityModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title text-center">Add Activity</h4>
+      </div>
+      <div class="modal-body text-center">
+        <form name="form" (ngSubmit)="saveActivity(f4)" #f4="ngForm">
+          <div class="col-lg-12 text-center">
+            <h5 style="font-size: 1.0em;color: #777777;margin-top: 25px;margin-bottom: 30px;">Fill in the details below to add your activity.</h5>
+            <hr/>
+                <!--
+                =============================
+                        IMAGE ACTIVITY
+                =============================
+            <img ng-src="{{ newActivity.profileImgURI }}" height="120px" width="100%" onclick="document.getElementById('uploadImage').click()">
+            <input type="file" id="uploadImage" accept="image/*" style="display:none" file-model="newActivity.image">
+            <input type="hidden" name="image" ng-model="newActivity.image">
+            -->
+            <div class="col-xs-10 col-xs-offset-1">
+              <div class="form-group form-dashboard">
+                  <input type="text" class="form-control" name="name" ngModel="" placeholder="Name" required>
+              </div>
+              <div class="form-group form-dashboard">
+                <div class="select">
+                  <span class="caret-select"></span>
+                  <!-- ng-options="org.id as org.name for org in myorgs"-->
+                  <select class="form-control select-dashboard modal-select" ngModel="{{id}}" name="orgId" placeholder="Select organization">
+                    <option value="" disabled selected class="placeholder">Select Organization</option>
+                    <option *ngFor="let org of MyOrgs" [ngValue]="org.id" class="placeholder">{{org .name}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group form-dashboard" style="margin-top: 30px;">
+                  <div class="row">
+                      <div class="col-sm-6" style="text-align:left;">
+                          <label class="" style="text-align:left;color: #333333;">Event details</label>
+                      </div>
+                      <div class="col-sm-6 modal-color">
+                          <label style="text-align: right;font-weight: normal;">
+                            <!-- ngModel="ActivityType"  click="details(ActivityType)"-->
+                             <md-checkbox [checked]=true name="eventStatus" (click)="eventT()" >ONE DAY EVENT</md-checkbox>
+                          </label>
+                      </div>
+                  </div>
+              </div>
+              <div *ngIf="eventType" class="form-group form-dashboard">
+                  <input type="date" class="form-control" name="date" ngModel="" placeholder="Select Date" format="yyyy-MM-dd " autohide="true" />
+              </div>
+              <div *ngIf="!eventType" class="form-group form-dashboard row">
+                  <div class="col-lg-6">
+                    <label>From</label>
+                   <input type="date" class="form-control" name="fromDate" ngModel="" placeholder="From"/>
+                  </div>
+                  <div class="col-lg-6">
+                   <label>To</label>
+                   <input type="date" class="form-control" name="toDate" ngModel="" placeholder="To" />
+                  </div>
+              </div>
+              <div *ngIf="!eventType" class="form-group form-dashboard">
+                  <div class="select">
+                  <span class="caret-select"></span>
+                  <!-- ng-options="org.id as org.name for org in myorgs"-->
+                  <select class="form-control select-dashboard modal-select" ngModel="" #activityType name="activityType" placeholder="Choose Category">
+                    <option value="DAILY" selected class="placeholder">Repeat daily</option>
+                    <option value="WEEKLY" class="placeholder">Repeat weekly</option>
+                  </select>
+                </div>
+              </div>
+              <div *ngIf="activityType == 'WEEKLY'" class="form-group form-dashboard modal-color">
+                  <span style="width:30%;margin-left:5px;" >Repeat:</span>
+                  <a ng-href="" class="btn btn-default"  style="width:10%;margin-left:5px;" (click)="toggleDay($index)" [ngClass]="{'btn-primary':selectedDays[$index]}"></a>
+              </div>
+              <div class="form-group form-dashboard row">
+                  <div class="col-lg-6">
+                    <label>From</label>
+                   <input type="time" name="fromTime" ngModel=""  class="form-control" placeholder="From"/>
+                  </div>
+                  <div class="col-lg-6">
+                   <label>To</label>
+                   <input type="time" name="toTime" ngModel="" class="form-control" placeholder="To" />
+                  </div>
+              </div>
+              <div class="form-group form-dashboard">
+                 <div class="select">
+                  <span class="caret-select"></span>
+                  <!-- ng-options="org.id as org.name for org in myorgs"-->
+                  <select class="form-control select-dashboard modal-select" ngModel="" name="tag" placeholder="Choose Category">
+                    <option value="" disabled selected class="placeholder">Choose Category</option>
+                    <option *ngFor="let user of UserPrefs" [ngValue]="user" class="placeholder">{{user}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group form-dashboard">
+                 <input type="text" class="form-control" name="address" ngModel="" placeholder="Address" required>  
+              </div>
+              <div class="form-group form-dashboard">
+                 <textarea class="form-control" name="bio" ngModel="" placeholder="Add a short description"></textarea>  
+              </div>
+              <div class="form-group form-dashboard" style="margin-top: 30px;">
+                  <div class="row">
+                      <div class="col-sm-6" style="text-align:left;">
+                          <label class="" style="text-align:left;color: #333333;">Pricing</label>
+                      </div>
+                      <div class="col-sm-6 modal-color">
+                          <label style="text-align: right;font-weight: normal;">
+                            <!-- ngModel="ActivityType"  click="details(ActivityType)"-->
+                            <md-checkbox name="priceStatus" (click)="priceStat()">FREE</md-checkbox>
+                          </label>
+                      </div>
+                  </div>
+              </div>
+              <div *ngIf="priceStatus"  class="form-group form-dashboard row">
+                  <div class="col-lg-6">
+                   <input type="number" min="0" step="0.01" name="amount" ngModel="" class="form-control" placeholder="Adult" />
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="select">
+                      <span class="caret-select"></span>
+                      <select class="form-control select-dashboard modal-select" ngModel="" name="currency">
+                        <option value="" disabled selected class="placeholder">Currency</option>
+                        <option *ngFor="let curr of currencies" [ngValue]="curr" class="placeholder">{{curr}}</option>
+                      </select>
+                    </div>
+                  </div>
+              </div>
+              <div class="form-group form-dashboard row">
+                  <div class="col-sm-4" style="text-align:left;">
+                    <label class="" style="text-align:left;color: #333333;">Max capacity</label><br>
+                   <span class="h6 modal-color" style="font-size: 0.6em;"><i>(Blank for unlimited)</i></span>
+                  </div>
+                  <div class="col-lg-8">
+                    <input type="number" min="0" step="1" class="form-control" name="maxAttenders" ngModel="" placeholder="" />  
+                  </div>
+              </div>
+            <!--Form Text Fields Ended-->
+            </div>
+
+          </div>
+        
+          <div class="text-center" style="padding: 60px 30px;background-color: #f8f8f8;">
+            <button type="submit" class="btn btn-primary modal-btn" style="width: 165px;">
+              <i class="fa fa-circle-o-notch fa-spin" *ngIf="loading"></i> <span *ngIf="loading"></span>
+              Add Activity
+            </button>
+          </div>
+            <!-- CANCEL BUTTON
+        <button type="button" class="btn btn-sm btn-link" ng-click="cancelNewActivity($dismiss)">Cancel</button>-->
+    </form>
+
+      </div>
+    </div>
+  </div>
+</div>

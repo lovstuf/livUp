@@ -1,0 +1,70 @@
+
+
+/* Large desktops and laptops */
+@media (min-width: 1200px) {
+    .form-box {
+        margin-top: 35px;
+    }
+}
+
+/* Landscape tablets and medium desktops */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .form-box { margin-top: 35px; }
+
+}
+
+/* Portrait tablets and small desktops */
+@media (min-width: 768px) and (max-width: 991px) {
+
+    /* Login - Register - Preferences */
+    .form-box { margin-top: 180px; }
+    .col-sm-4{ width: 80%; margin-left: 13%; }
+    .form-bottom { padding: 10px 40px 25px 40px; }
+    .logo{ width: 150px; }
+    .search-icon { top: 72%; right: 80px; margin-top: -10px; }
+    .forgot{ top: 71%; }
+
+    /* My Org Dashboard */
+    .my-org-db-img{ height:150px; width: 100%; }
+    .my-org-activity-info{ text-align: center; }
+    .my-org-dash-name{text-align: center;}
+
+    /* dashboard */
+    .dash-p-right{padding-right: 0;}
+
+    /* Profile */
+    .profile-img-edit{ left: 24%; }
+}
+
+/* Landscape phones and portrait tablets */
+@media (max-width: 767px) {
+    .form-box {
+        margin-top: 180px;
+    }
+
+    /* My Org Dashboard */
+    .my-org-db-img{ height:150px; width: 100%; }
+    .my-org-activity-info{ text-align: center; }
+    .my-org-dash-name{text-align: center;}
+
+    /* dashboard */
+    .dash-p-right{padding-right: 0;}
+
+    /* Profile */
+    .profile-img-edit{ left: 24%; }
+}
+
+/* Portrait phones and smaller */
+@media (max-width: 480px) {
+    .form-box {
+        margin-top: 180px;
+    }
+}
+
+/* Modal Sm */
+@media (min-width: 768px){
+    .modal-dialog {
+        margin: 30px auto;
+        border-radius: 3px;
+    }
+}

@@ -1,0 +1,16 @@
+.header {
+    text-align: center;
+    font-weight: 500;
+    background-color: #ffffff;
+    height: 68px;
+    line-height: 50px;
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    box-shadow: 0 0 3px rgba(0,0,0,0.175);
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    z-index: 101;
+}

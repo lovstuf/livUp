@@ -1,0 +1,112 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-7">
+        <div class="col-md-12">
+            <article class="col-lg-12 liv-panel section" *ngFor="let activity of getActivity" style="padding:0px;background-color:white">
+                <div class="col-lg-12 panel-body " id="activiImage" [ngStyle]="{ 'background': 'url('+getProfileImgURI(activity.profileImgURI)+') no-repeat center center',
+                            'height':'350px','background-size':'cover','padding':'0' } ">
+                    <div [ngStyle]="{'background': 'rgba(0,0,0,0.5)','width':'100%','height':'25%', 'margin-top': '263px'}">
+                        <div *ngIf="authGuard.isLoggedIn()==false">
+                            <span class="btn btn-primary modal-btn" [ngStyle]="{'margin-left':'15px','width': '60px','padding-top':'10px','margin-top':'26px'}">
+                                <a ng-href="" [routerLink]="['/login']" style="text-decoration:none;color:white">LOGIN</a>
+                            </span>
+                        </div>
+                        <!--<form name="form" ng-if="!isEnrolled && canEnrol">
+                            <div class="col-lg-12" ng-repeat="price in activity.price" ng-if="activity.price">
+                                <div class="col-lg-8" style="color: white">
+                                    <h2 style="margin-top: 33px !important;">
+                                        Price <i class="fa fa-{{ price.currency.toLowerCase() }}"></i>{{ price.amount }} for {{ price.description
+                                        }}
+                                    </h2>
+                                </div>
+                                <div class="col-lg-4 text-right" style="color: white">
+                                    <button type="submit" class="btn btn-primary" ng-click="togglePrice(price);enroll();" style="margin-top: 20px; width: 50%; height: 45px">Sign Up</button>
+                                </div>
+                            </div>
+                            <div style="background-color: red" ng-if="!activity.price" ng-cloak>
+                                <h1>Free</h1>
+                            </div>
+                            <div class="form-group" ng-cloak ng-if="priceIsSet()">
+                            </div>
+                        </form>-->
+                        <!--<div class="col-lg-12" ng-cloak ng-if="isEnrolled" style="padding: 0 0">
+                            <div class="col-lg-8 col-md-8 col-sm-8" style="color: white; margin-top: 29px; padding: 0 0 0 15px;">
+                                <h4>Awesome you've signed up to this activity</h4>
+                            </div>
+                            <div ng-if="secured" class="col-lg-4 col-md-4 col-sm-4 text-right" style="padding: 0 0;">
+                                <span class="btn btn-primary " style="background-color:#27b645 !important;border:none;margin-right:15px; margin-top: 30px; width: 50%; height: 32px;display:inline-block">I'M GOING</span>
+
+
+                            </div>
+                            <div ng-if="secured" ng-repeat="price in activity.price">
+                                <div ng-if="price.amount <= 0">
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+                
+                <div class="panel-footer footer-post">
+                    <div class="col-lg-1" >
+                        <div *ngFor="let t of tag" class="title-rotation">{{ t | uppercase}}</div>
+                        <div *ngIf="tag==''" class="title-rotation">&nbsp;</div>
+                    </div>
+                    <div class="col-lg-11 details" style="padding-top:15px; min-height:200px; padding-left: 0px;">
+                        <span *ngFor="let p of price" class="price pull-right">
+                            <i *ngIf="p.currency=='USD'" class="fa fa-usd" ></i>
+                            <i *ngIf="p.currency=='EUR'" class="fa fa-eur" ></i>
+                            <i *ngIf="p.currency=='GBP'" class="fa fa-gbp" ></i>
+                            <i *ngIf="p.currency=='AUD'" class="fa fa-money" ></i>
+                            <i *ngIf="p.currency=='NZD'" class="fa fa-money" ></i>
+                            <i *ngIf="p.currency=='CHR'" class="fa fa-money" ></i>
+                            {{ p?.amount }}
+                        </span>
+                        <span *ngIf="price==''" class="price pull-right">FREE</span>
+                        <a class="title" [routerLink]="['/activites',activity.activityId]" >{{ activity?.name | uppercase }},</a>
+                        <a ng-href="" [routerLink]="['/organizations',activity.orgId]" style="color: #666666" > {{ activity?.orgName }}</a>
+                        <p style="display: block; /* Fallback for non-webkit */display: -webkit-box; -webkit-line-clamp: 1;-webkit-box-orient: vertical;overflow: hidden;text-overflow: ellipsis;">
+                        {{ activity?.bio }}
+                        </p>
+                        
+                        <ul class="list-inline">
+                            <li *ngIf="activity.oneDayDetails?.date" >
+                                <span class="typcn typcn-calendar-outline"></span>
+                                <i>{{activity.oneDayDetails?.date | date: 'dd/MM/yyyy'}}</i>
+                            </li>
+                            <li *ngIf="activity.oneDayDetails?.fromTime" >
+                                <span class="fa fa-clock-o"></span>
+                                <i>{{activity.oneDayDetails?.fromTime | date: 'hh:mm a' }} - {{activity.oneDayDetails?.toTime | date: 'hh:mm a'}}</i>
+                            </li>
+                            <li *ngIf="activity.term?.repeats" >
+                                <span class="typcn typcn-calendar-outline"></span>
+                                <i><b>{{ activity.term?.repeats }}</b> from {{activity.term?.start | date: 'dd/MM/yyyy'}} to {{activity.term?.end | date: 'dd/MM/yyyy'}}</i>
+                            </li>
+                            <br *ngIf="!activity.oneDayDetails"/><span  *ngIf="!activity.oneDayDetails && activity.term.repeats=='WEEKLY'" style="padding-left:25px;margin-top:10px;display:inline-block;margin-bottom:5px">Repeats:</span>
+                            <span *ngIf="!activity.oneDayDetails && activity.term.repeats=='WEEKLY'">
+                                <span *ngFor ="let day of days; let i = index;" class="btn btn-default btn-xs" disabled="true"  style="margin-left:5px;margin-top:2px;" [ngClass]="{'btn-primary':selectedDays[i]}">{{day | slice:0:1 }}</span>
+                            </span>
+                            <br *ngIf="!activity.oneDayDetails"/>
+                            <li *ngIf="activity.term?.fromTime">
+                                <span class="fa fa-clock-o"></span>
+                                <i> {{activity.term?.fromTime | date: 'hh:mm a'}} to {{activity.term?.toTime | date: 'hh:mm a'}}</i>
+                            </li>
+                            <li *ngIf="authGuard.isLoggedIn()==true"><span class="typcn typcn-location-outline"></span> <i> {{ activity.address }} </i></li>
+                        </ul>
+                        <div *ngIf="authGuard.isLoggedIn()==true">
+                            <a href="" class="">
+                                <i class="fa fa-heart-o" [ngClass]="activity.likes==0 ? 'fa-heart-o' : 'fa-heart'" ></i>
+                            </a>
+                            <span style="font-size: 12px;color: #6a6a6a;"> 0 Likes</span>
+                            <a style="margin-left: 50px;" *ngIf="isOwner" href="" (click)="showEditModal()"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="col-xs-12">
+        <lc-my-interests></lc-my-interests>
+        <lc-my-organisations></lc-my-organisations>
+      </div>
+    </div>

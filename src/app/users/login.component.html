@@ -1,0 +1,26 @@
+<div class="containt-login">
+  <div class="container">
+    <div class="col-md-4"></div>
+    <div class="col-md-4 form-login" style="padding-right: 0px;padding-left: 0px;">
+      <span style="color:#f68a55;font-size:24pt;margin-top:35px;display:block;text-align:center" class=">title-signup StreetscriptRedux" >Login</span>
+      <span *ngIf="errorMessage" style="text-align: center; display: block; padding-top: 10px; color: red;" class="error">{{errorMessage}}</span>
+      <!--Invalid email or/and password.-->
+      <form role="form" name="form" class="" (submit)="login(email.value, password.value)">
+        <div class="form-group">
+          <input type="email" #email class="form-control" placeholder="Email" name="email" required />
+        </div>
+        <div class="form-group">
+          <input type="password" #password class="form-control" placeholder="Password" name="password" required />
+        </div>
+        <div class="form-group center-block">
+          <button type="submit" class="btn-register center-block">LOGIN</button>
+        </div>
+      </form>
+      <div class="form-signup-bottom">
+        <div class="form-group" style="margin-bottom:16px;"><span>OR</span></div>
+        <div class="form-group"><button (click)="onFacebookLoginClick()" class="btn btn-facebook"><i class="pull-left fa fa-facebook"></i>Connect with facebook</button></div>
+        <div class="form-group"><span>Haven't got an account?<a [routerLink] = "['/register']"> <u>Sign Up</u></a> here.</span></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,93 @@
+<div class="row">
+  <div class="col-md-12 listing-content">
+    <span class="add-org"><a ng-href="" (click)="addOrgModal.show()"><i class="fa fa-plus-circle"></i> Add organization</a></span>
+  </div>  
+  <h4 *ngIf="!MyOrgs" style="color: #9d9d9d; text-align:center;margin-top: 50px"> You don't have an organization, <br> add yours and get discovered.</h4><br>
+  
+</div>
+<br />
+<!--Adding Organization Modal-->
+<div class="modal fade" bsModal #addOrgModal="bs-modal" [config]="{backdrop: 'static'}" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="addOrgModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title text-center">Add Organization</h4>
+      </div>
+      <div class="modal-body text-center">
+        <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+          <div style="margin-top: 20px">
+            <span style="font-size: 1.0em; color: #777777;">Fill in the details bellow to add your organization. One an organization is approved, you will get a confirmation email in your mailbox.</span><br>
+            <hr />
+          </div>
+          <div *ngIf="status!='false'">
+            <alert type="success" dismissible="true" dismissOnTimeout="3000" (onClosed)="addOrgModal.hide()">{{status}}</alert>
+          </div>
+          <div *ngIf="error!='false'">
+            <alert type="danger" dismissible="true" dismissOnTimeout="3000">{{error}}</alert>
+          </div>
+          <div style="position: relative; width: 120px; height: 120px; margin: 0 auto; ">
+            <img ng-src="" class="pointer" height="120px" width="120px">
+          </div>
+          <br><br><br>
+          <div class="col-xs-8 col-xs-offset-2" style="margin-bottom: 30px">
+            <div class="form-group form-dashboard">
+              <input type="text" class="form-control " #name id="name" ngModel="" name="name" placeholder="Name" required>
+            </div>
+            <div class="form-group form-dashboard">
+              <input type="text" class="form-control " #address1 ngModel="" name="address" placeholder="Address" required>
+            </div>
+            <div class="form-group form-dashboard">
+              <input type="email" class="form-control " #email ngModel="" name="email" placeholder="Email" required>
+            </div>
+            <div class="form-group form-dashboard">
+              <input type="text" class="form-control " #telephone ngModel="" name="telephone" placeholder="Phone" required>
+            </div>
+
+          </div>
+          <div class="text-center" style="padding: 60px 30px">
+            <button type="submit" class="btn btn-primary modal-btn" style="width: 165px;"><span></span>Add Organization</button>
+            <!-- <button type="button" class="btn btn-sm btn-link" ng-click="cancelNewOrg()">Cancel</button> -->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="col-lg-12" *ngFor="let organization of MyOrgs" style="padding: 0;">
+  <section class="panel organization-post">
+    <div class="panel panel-default">
+      <div class="panel-body body-post">
+        <div class="col-md-4">
+          <!--<a ui-sref="organization({id: organization.id})">-->
+            <a ng-href="" [routerLink]="['/organizations',organization.id]" >
+              <img *ngIf="organization.profileImgURI" [src]="getProfileImgURI(organization.profileImgURI)" class="img-responsive" alt="">
+              <img *ngIf="!organization.profileImgURI" [src]="getProfileImgURI('')" class="img-responsive" alt="">
+            </a>
+          <!--  <div class="img-foot"><span><i class="fa fa-heart"></i> likes</span></div> -->
+        </div>
+        <div class="col-md-6">
+          <!--<a ui-sref="organization({id: organization.id})">-->
+          <a ng-href="" [routerLink]="['/organizations',organization.id]">
+            <h4 class="title">{{organization.name }}</h4>
+          </a>
+          <ul class="list-unstyled list-contact">
+            <!--  <li><i class="fa fa-envelope"></i> email?</li> -->
+            <!--  <li><i class="fa fa-phone"></i> phone?</li> -->
+            <li><i class="fa fa-map-marker"></i> {{organization.address }}</li>
+            <!-- <li><i class="fa fa-globe"></i> website?</li> -->
+
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+</div>

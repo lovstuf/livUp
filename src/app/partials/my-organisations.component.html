@@ -1,0 +1,41 @@
+<!-- organisations -->
+<div class="row" style="margin-top: 20px;">
+  <div class="col-xs-12 modal-header">
+    <span class="title-section"><span class="typcn typcn-group-outline"></span>My organisations</span>
+  </div>
+  <div class="col-xs-12 sidebar-body">
+    <a *ngIf="authGuard.isLoggedIn()==false" [routerLink]="['/login']">
+      <img src="/assets/img/my-orgs-grey.png" class="img-responsive" />
+    </a>
+    <div *ngIf="authGuard.isLoggedIn()==true">
+      <div *ngFor="let myOrg of getMyOrgs; let i=index">
+        <template [ngIf]="i<3">
+          <div class="row organisation" style="min-height: 60px;">
+            <div class="col-xs-4">
+              <a ng-href="" [routerLink]="['/organizations',myOrg.id]" *ngIf="myOrg.profileImgURI">
+                <img  [src]="getProfileImgURI(myOrg.profileImgURI)" class="img-responsive img-org-sid" alt="">
+              </a>
+              <a ng-href="" [routerLink]="['/organizations',myOrg.id]" *ngIf="!myOrg.profileImgURI">
+                <img  [src]="getProfileImgURI('')" class="img-responsive img-org-sid" alt="">
+              </a>
+            </div>
+            <div class="col-xs-8" style="padding-top: 20px;">
+              <a ng-href="" [routerLink]="['/organizations',myOrg.id]" class="bold" style="color: black;">{{myOrg.name}}</a>
+              <p class="modal-color">Members: <span class="nbr-org">{{myOrg.likes}}</span>&nbsp; &nbsp; Ongoing activities: <span class="nbr-org">{{myOrg.currActCt}}</span></p>
+            </div>
+          </div>
+        </template>
+      </div>
+      <a *ngIf="getMyOrgs==''" ng-href="">
+        <img src="/assets/img/my-orgs-grey.png" class="img-responsive" />
+      </a>
+    </div>
+     <hr>
+  </div>
+  <div class="col-xs-12 sidebar-body text-center">
+    <a [routerLink]="['/my/organizations']" class="btn btn-viewall">VIEW ALL</a>
+  </div>
+</div>
+<!-- ./organisations -->
+
+

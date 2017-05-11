@@ -1,0 +1,32 @@
+<div class="listing-content">
+  <div class="col-lg-12" *ngFor="let organization of MyLikedOrgs" style="padding: 0;">
+    <section class="panel organization-post">
+      <div class="panel panel-default">
+        <div class="panel-body body-post">
+          <div class="col-md-4">
+              <a ng-href="" [routerLink]="['/organizations',organization.id]" >
+                <img *ngIf="organization.profileImgURI" [src]="getProfileImgURI(organization.profileImgURI)" class="img-responsive" alt="">
+                <img *ngIf="!organization.profileImgURI" [src]="getProfileImgURI('')" class="img-responsive" alt="">
+              </a>
+            <!--  <div class="img-foot"><span><i class="fa fa-heart"></i> likes</span></div> -->
+          </div>
+          <div class="col-md-6">
+            <a ng-href="" [routerLink]="['/organizations',organization.id]">
+              <h4 class="title">{{organization.name }}</h4>
+            </a>
+            <ul class="list-unstyled list-contact">
+              <!--  <li><i class="fa fa-envelope"></i> email?</li> -->
+              <!--  <li><i class="fa fa-phone"></i> phone?</li> -->
+              <li><i class="fa fa-map-marker"></i> {{organization.address }}</li>
+              <!-- <li><i class="fa fa-globe"></i> website?</li> -->
+
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+  </div>
+</div>
